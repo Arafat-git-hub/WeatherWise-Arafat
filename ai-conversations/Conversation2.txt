@@ -1,0 +1,34 @@
+Architectural Options
+----------------------------------
+Tool: ChatGPT
+Date: 2025-09-22
+----------------------------------
+
+
+
+Me: Sounds right. I want to make sure we tackle this smoothly. Before we jump into the first function, what are our main phases, and what architectural options should we consider? I want to aim for maximum modularity and robustness.
+
+AI: That focus on modularity is key. I see four main functional blocks: 1) Data Retrieval (connecting to wttr.in), 2) NLU (parsing the user's question), 3) Response Generation (creating the advice), and 4) Visualization.
+
+To structure how these blocks interact, here are three distinct architectural approaches:
+
+Approach 1: The Modular Pipeline (Recommended)
+Concept: This treats the application as a strict sequential flow: Input → NLU → Data Retrieval → Response.
+Pros: Highly testable because each function (parse_question, get_weather_data, generate_response) is isolated and only depends on the output of the previous one. We can define clear data contracts (like standardized dictionary output) for every stage.
+Cons: Requires slightly more initial effort to define those contracts perfectly.
+
+Approach 2: Conversational State Management
+Concept: The main loop maintains a session object (or state dictionary) that stores context (like the last location requested, or preferred units).
+Pros: Excellent for user experience. Users can ask follow-up questions like "What about tomorrow?" without having to repeat "in London."
+Cons: The core logic becomes more complex and tightly coupled to the main() function, making unit testing harder.
+
+Approach 3: Data-First, Visualization Focus
+Concept: Data Retrieval is the first priority. We use the retrieved weather data to immediately generate the necessary visualizations, and the advisory response is simply an annotation on the visual.
+Pros: Quickly satisfies the visualization requirement. Good for data exploration apps.
+Cons: The NLU/Advisory system becomes an afterthought, making the overall conversational aspect feel less intelligent.
+
+Me: Approach 1, the Modular Pipeline, sounds like the best fit, especially since I need to demonstrate intentional prompting around data contracts and robustness. It forces us to define the standardized data output from the start.
+
+AI: Perfect. I agree. That means our immediate next step is defining the exact data contract for the get_weather_data function. We need to decide what fields (temperature, precipitation, condition) and format it will always return, regardless of whether it uses a Python wrapper or falls back to raw API JSON. This is crucial for isolating the NLU and Response modules from the API's messiness.
+
+Me: Great. Let's start with the Data Retrieval function then, and focus immediately on error handling and structuring the output.

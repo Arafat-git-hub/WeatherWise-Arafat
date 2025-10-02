@@ -1,0 +1,50 @@
+Understanding Assignment Requirements
+----------------------------------
+Tool: ChatGPT
+Date: 2025-09-22
+----------------------------------
+
+
+
+Me: Can you help me design a `get_weather_data` function that defines my expected output regardless of whether the function uses the Python wrapper or falls back to raw wttr.in JSON? I need to ensure my downstream functions only have to deal with one consistent structure.
+
+AI: Yes. The function should first try to use the `fetch-my-weather` package. If that fails, it must fall back to using the wttr.in JSON endpoint. Both sources should be normalized into a consistent structure so your downstream code doesn’t care which provider was used.
+
+The return structure should look like:
+```json
+{
+  'location': 'City',
+  'current': { 'temp_C': float, 'condition': str, 'humidity': int, 'wind_kmph': float },
+  'forecast': [
+      { 'date': 'YYYY-MM-DD', 'maxtempC': float, 'mintempC': float, 'avgtempC': float, 'precipMM': float, 'hourly': [...] },
+      ...
+  ],
+  'source': 'fetch-my-weather' or 'wttr'
+}
+If there’s an error, return {'error': '...'} instead of None. That way your UI can check and display error messages safely.
+
+Me: The contract is clear. Now for the implementation detail: The assignment requires the use of fetch-my-weather, but if it fails, I must fall back to raw requests. Request an iterative improvement: If the wrapper fails, I need the precise requests code snippet for the fallback call, ensuring I retrieve the data in the exact JSON format (format=j1) that matches the structure my normalization logic expects. Provide the Python code using requests.get for the fallback.
+
+AI: That is a critical point. If your fallback doesn't request JSON, your parsing logic will instantly fail. You must explicitly include ?format=j1 in the URL to receive the machine-readable JSON object.
+
+The Required Fallback Code Snippet:
+
+Python
+
+# Fallback mechanism inside get_weather_data function:
+import requests
+# ...
+except Exception:
+    # 1. URL encode the location for safety
+    encoded_location = requests.utils.quote(location)
+    
+    # 2. Construct the URL with the JSON format flag
+    url = f"[https://wttr.in/](https://wttr.in/){encoded_location}?format=j1" 
+    
+    # 3. Execute the request and parse the JSON
+    response = requests.get(url, timeout=5)
+    response.raise_for_status() # Crucial for detecting 4xx/5xx errors
+    raw_json_data = response.json()
+    
+    # After this, proceed with normalization using the defined contract.
+This ensures that the fallback retrieves the correct format, maintaining consistency with your overall data contract and satisfying the robust design requirements.

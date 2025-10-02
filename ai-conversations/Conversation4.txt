@@ -1,0 +1,42 @@
+Error Handling for Invalid Locations
+----------------------------------
+Tool: ChatGPT
+Date: 2025-09-26
+----------------------------------
+
+
+
+Me: I've debugged the crashes, but the actual data is wrong. **Restate the problem:** Precipitation values always show 0.0 mm, no matter the location, and my forecast never returns more than 3 days, even when I set the days to 5. Both issues make the application functionally useless. **I need the exact logic to fix the precipitation calculation, and I need to know why the day limit is occurring.**
+
+AI: The issues stem from known limitations and inconsistencies in the `wttr.in` JSON output:
+
+**1. Precipitation Fix (Data Inconsistency):**
+The top-level daily summary `precipMM` field is unreliable and often zeroed. The accurate data is only found in the `hourly` list. Your code is currently reading the unreliable daily field.
+
+**Initial (Failing) Code Logic:**
+```python
+# Before Prompting (Example 2 - Bug in get_weather_data)
+# This uses the incorrect top-level field for precipitation:
+day_data = {
+    'date': day.get('date'),
+    'precipMM': float(day.get('precipMM', 0)) # <-- This is the flawed line
+    # ... other fields
+}
+Improved Code Logic (Result of Prompting):
+
+Python
+
+# After Prompting (Example 2 - Fix in get_weather_data)
+# This calculates the total by summing the reliable hourly data:
+total_precip_mm = 0.0
+hourly_data = day_raw.get('hourly', [])
+
+for hour in hourly_data:
+    # Safely convert the string value from the hourly block to float
+    total_precip_mm += float(hour.get('precipMM', '0.0') or '0.0')
+
+day_data = {
+    'date': day.get('date'),
+    'precipMM': round(total_precip_mm, 2) # <-- Corrected value
+    # ... other fields
+}

@@ -1,0 +1,37 @@
+Debugging Utility Functions
+----------------------------------
+Tool: ChatGPT
+Date: 2025-09-22
+----------------------------------
+
+
+
+Me: My parsing code is full of defensive checks like `if data and 'key' in data:` and it’s very long. I need to clean it up. **What is the function of the helpers `safe_get` and `to_title`, and how does implementing them improve the overall modular design and readability of the main `get_weather_data` function?**
+
+AI: These functions are foundational for good code quality:
+
+1.  **`safe_get`:** It abstracts complex, multi-level dictionary and list lookups into a single, clean function call. It prevents the common `KeyError` or `IndexError` by returning `None` instead of crashing. This improves modularity by decoupling the **data parsing logic** (inside `safe_get`) from the **data retrieval logic** (inside `get_weather_data`).
+2.  **`to_title`:** It standardizes data output (e.g., location names like "new york" → "New York") and includes error handling for non-string inputs (like `None`), ensuring consistency across the application.
+
+Me: That's clear. However, after using `to_title` with type hinting, I got a `NameError: Optional not defined` when running it. **Challenge this edge case: Why did Python not recognize `Optional` in the type hint, and how must I fix my code? Show the before/after.**
+
+AI: This is a common oversight when working with type hinting. `Optional` is not a built-in keyword; it is a specialized utility that must be imported.
+
+**Initial (Failing) Code Snippet:**
+```python
+# Before Prompting (Example 3 - Bug)
+# This causes NameError: Optional not defined
+def to_title(text: Optional[str]) -> str:
+    return text.title() if text else ""
+Improved Code Snippet (Result of Prompting):
+
+Python
+
+# After Prompting (Example 3 - Fix)
+from typing import Optional # The necessary fix
+
+def to_title(text: Optional[str]) -> str:
+    # ... code runs fine now ...
+Explanation: By adding from typing import Optional, you explicitly tell the interpreter where to find the type utility, ensuring your code is both type-hinted and runnable, which is essential for the Code Quality criteria.
+
+Me: Understood. I will add the necessary imports to ensure my type-hinted modular code runs flawlessly.
