@@ -1,63 +1,82 @@
-# 🌦️ WeatherWise Template
+# 🌦️ WeatherWise: Intelligent Weather Analysis & Advisory System
 
-Welcome to the **WeatherWise Assignment Starter Template**! This repository helps you kickstart your project by combining Python, weather APIs, data visualisation, and AI-assisted development. 🤖📊
+## Overview
 
-![Build With AI](https://img.shields.io/badge/Built_with-AI-blueviolet?logo=openai)
-![Python](https://img.shields.io/badge/Made_with-Python-3776AB?logo=python)
-![Visualisation](https://img.shields.io/badge/Includes-Visualisations-orange?logo=plotly)
+## 
 
----
+**WeatherWise** is a Python-based intelligent weather advisor application designed to interpret natural language queries, retrieve current and forecast weather data, and generate tailored, conversational advice.
 
-## 🚀 How to Use This Template
+This project was built following a strict **Modular Pipeline** architecture, emphasizing **robustness** through well-defined data contracts and comprehensive error handling. A key focus of this development was the use of **Intentional Prompting** techniques to guide AI tools (like Gemini/ChatGPT) through the design, debugging, and refinement process.
 
-1. Click **"Use this template"** on GitHub to create your own copy.
-2. Rename your repository to something like `weatherwise-jane-doe`.
-3. Clone it and start developing in `starter_notebook.ipynb`.
+## 🚀 Key Features
 
----
+## 
 
-## 📁 Folder Structure
+*   **Intelligent Advisory:** Converts complex weather data into simple, actionable advice (e.g., "It's safe to bike, but bring a light jacket as the temperature will drop below by 6 PM").
+    
+*   **Robust Data Retrieval:** Functions as a unified interface to multiple weather providers, primarily using `fetch-my-weather` with a guaranteed fallback to the **wttr.in** API using explicit JSON formatting (`?format=j1`).
+    
+*   **Crash-Proof Contract:** The core `get_weather_data` function is engineered to _always_ return a standardized dictionary containing either valid weather data or an explicit `'error'` key, ensuring the application never crashes on API failure or invalid input (a direct result of iterative prompting).
+    
+*   **Interactive UI:** Utilizes `ipywidgets` to provide a user-friendly, interactive experience directly within the notebook environment (e.g., Google Colab).
+    
+*   **Data Visualization:** Renders charts (e.g., using `matplotlib` or `altair`) to visualize forecast trends (temperature, precipitation, wind speed) alongside the advisory text.
+    
 
-- `starter_notebook.ipynb` — Main notebook to build your project.
-- `ASSIGNMENT.md` — Full assignment specification.
-- `ai-conversations/` — Save your `.txt` AI conversations here.
-- `resources/` — Guides, prompting tips, and AI technique examples.
-- `submission/` — Files to help you finalise your submission:
-  - `checklist-md.md` — Submission checklist
-  - `reflection.md` — Write your 300–500 word project reflection
-  - `one-page-summary.md` — (Optional) Your own summary of key ideas or process
+## 🛠️ Project Architecture (Modular Pipeline)
 
----
+## 
 
-📄 **Quick Overview:**  
-A one-page summary of the full assignment is available in [`resources/assignment-summary.md`](resources/assignment-summary.md).
+The system is structured as a clear, sequential data pipeline to maximize testability and modularity:
 
----
+1.  **Input** → **NLU:** Parses the user's question to extract _Location_ and _Intent_.
+    
+2.  **NLU** → **Data Retrieval:** Calls the robust `get_weather_data` function.
+    
+3.  **Data Retrieval** → **Response Generation:** Uses the standardized weather data contract to generate the conversational response.
+    
+4.  **Visualization:** Creates dynamic charts based on the processed forecast data.
+    
 
-## 📓 Submission Checklist
+This approach ensures that each module is independent and only relies on the strictly defined output structure of the previous step.
 
-✅ Complete all required functions  
-✅ Include at least 5 AI conversations in `ai-conversations/`  
-✅ Document your intentional prompting  
-✅ Fill in your project reflection in `submission/reflection-template.md`  
-✅ Zip your project and upload it to the LMS  
+## 📋 Setup and Installation
 
----
+## 
 
-🧠 AI Conversations  
-Save your AI interactions in the `ai-conversations/` folder.  
-See `ai-conversations/how-to-log-ai-conversations.md` for details.
+This project is designed to run seamlessly in a **Google Colab** environment.
 
+### Prerequisites
 
---
-## 🧠 Need Help with AI Prompts?
+## 
 
-Check out:
-Check out:
-- `resources/ai-tips-tricks.md` — Prompting tips and pitfalls
-- `resources/sample-prompting-journey.md` — Full example of AI-enhanced development
-- `resources/prompts-by-method-step.md` — Prompts aligned with the 6-step dev process
-- `resources/before-after-example.md` — Required: Show how your prompting improved AI-generated code
+You will need the following Python packages installed:
 
+    # Recommended environment setup
+    pip install requests fetch-my-weather ipywidgets
+    
 
-Good luck and have fun! 💡🌤️
+### Getting Started
+
+## 
+
+1.  **Clone the Repository:**
+    
+        git clone [https://github.com/Arafat-git-hub/WeatherWise-Arafat.git](https://github.com/Arafat-git-hub/WeatherWise-Arafat.git)
+        cd weatherwise-project
+        
+    
+2.  **Open the Notebook:** Launch the main application notebook in Google Colab:  
+    
+3.  **Run Cells:** Execute the cells sequentially. The interactive UI powered by `ipywidgets` will appear, allowing you to input natural language weather questions.
+    
+
+## 🧠 Intentional Prompting Log
+
+## 
+
+A critical component of this project is demonstrating a sophisticated, collaborative approach to development using AI.
+
+*   **`PROMPTING.md`:** Contains the detailed, documented "Before/After" examples showing how specific, targeted prompts were used to solve architectural flaws (like returning `None` instead of an error dict), fix data inconsistencies (like calculating total precipitation from hourly data), and implement helper functions (`safe_get`, `to_title`).
+    
+*   **`CONVERSATION_LOG.txt`:** Provides the raw, formatted transcripts of the development conversation, including the initial architectural strategy discussion.
