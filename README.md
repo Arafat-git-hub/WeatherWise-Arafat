@@ -62,8 +62,8 @@ You will need the following Python packages installed:
 
 1.  **Clone the Repository:**
     
-        git clone [https://github.com/Arafat-git-hub/WeatherWise-Arafat.git](https://github.com/Arafat-git-hub/WeatherWise-Arafat.git)
-        cd weatherwise-project
+        git clone https://github.com/Arafat-git-hub/WeatherWise-Arafat.git
+        cd WeatherWise-Arafat
         
     
 2.  **Open the Notebook:** Launch the main application notebook in Google Colab:  
